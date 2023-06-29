@@ -4,6 +4,7 @@ import vide1 from './images/video/cccd.mp4'
 import vide from './images/video/van_tay.mp4'
 import Slide from './ViewPager';
 
+
 function App() {
   const mediaItems = [
     { type: 'video', src: vide1 },

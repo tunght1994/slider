@@ -1,9 +1,9 @@
+import ReactPlayerCustom from "./ReactPlayerCustom";
 import React, { useState, useEffect, useRef } from "react";
-import ReactPlayer from "react-player";
-import "./Slide.css";
+import Slider from "react-slick";
+// import './Slide.css'
 
-const Slide = ({ mediaItems }) => {
-  
+const  SimpleSlider = ({mediaItems}) => {
   const playerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [videoEnded, setVideoEnded] = useState(false);
@@ -16,16 +16,9 @@ const Slide = ({ mediaItems }) => {
           typeMedia === "video" && videoEnded ? 0 : 10000
         )
       : null;
-      console.log(playerRef.current);
 
     return () => clearTimeout(timeout);
   }, [activeIndex, mediaItems.length, videoEnded]);
-
-  const goToPrevSlide = () => {
-    setActiveIndex((prevIndex) =>
-      prevIndex === 0 ? mediaItems.length - 1 : prevIndex - 1
-    );
-  };
 
   const goToNextSlide = () => {
     const nextIndex =
@@ -33,6 +26,7 @@ const Slide = ({ mediaItems }) => {
     setTypeMedia(mediaItems[nextIndex].type);
     setVideoEnded(mediaItems[nextIndex].type === "image");
     setActiveIndex(nextIndex);
+    playerRef?.current?.slickNext();
   };
 
 
@@ -40,47 +34,38 @@ const Slide = ({ mediaItems }) => {
     setVideoEnded(true);
   };
 
-  return (
-    <div className="slide-container">
-      <button className="prev-button" onClick={goToPrevSlide}>
-        Prev
-      </button>
-      <button className="next-button" onClick={goToNextSlide}>
-        Next
-      </button>
-      <div className="media-container">
-        {mediaItems.map((item, index) => (
-          <div
-            key={index}
-            className={`media ${
-              index === activeIndex
-                ? "slide-active"
-                : index === activeIndex - 1 ||
-                  (activeIndex === 0 && index === mediaItems.length - 1)
-                ? "slide-previous"
-                : "slide-next"
-            }`}
-          >
-            {item.type === "image" && (
-              <img src={item.src} alt={`image ${index}`} />
-            )}
-            {item.type === "video" && (
-              <ReactPlayer
-                ref={playerRef}
-                url={item.src}
-                controls={true}
-                width="100%"
-                height="100%"
-                playing={index === activeIndex}
-                onEnded={handleVideoEnded}
-              />
+    const settings = {
+      dots: true,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 1,
+      slidesToScroll: 1
+    };
+    return (
+      
+      <Slider ref ={playerRef} {...settings} afterChange={(e) => {
+        setActiveIndex(e)
+      }}>
+      {mediaItems.map((item, index) => (
+        <div
+          key={index}
+        >
+          {item.type === "image" && (
+            <div><img src={item.src} alt={`image ${index}`} /></div>
+          )}
+          {item.type === "video" && (
+            <ReactPlayerCustom
+              url={item.src}
+              controls={true}
+              playing={index === activeIndex}
+              onEnded={handleVideoEnded}
+            />
+          )}
+        </div>
+      ))}
+    </Slider>
+    );
+  
+}
 
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default Slide;
+export default SimpleSlider
