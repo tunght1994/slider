@@ -1,7 +1,7 @@
 import ReactPlayerCustom from "./ReactPlayerCustom";
 import React, { useState, useEffect, useRef } from "react";
 import Slider from "react-slick";
-// import './Slide.css'
+import './Slide.css'
 
 const  SimpleSlider = ({mediaItems}) => {
   const playerRef = useRef(null);
@@ -16,7 +16,8 @@ const  SimpleSlider = ({mediaItems}) => {
           typeMedia === "video" && videoEnded ? 0 : 10000
         )
       : null;
-
+        console.log(videoEnded);
+        console.log(typeMedia);
     return () => clearTimeout(timeout);
   }, [activeIndex, mediaItems.length, videoEnded]);
 
@@ -35,9 +36,9 @@ const  SimpleSlider = ({mediaItems}) => {
   };
 
     const settings = {
-      dots: true,
+      dots: false,
       infinite: true,
-      speed: 500,
+      autoplay: false,
       slidesToShow: 1,
       slidesToScroll: 1
     };

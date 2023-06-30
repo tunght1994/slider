@@ -14,10 +14,7 @@ function App() {
   ];
 
   return (
-    <div>
-    <h1>Media Viewer</h1>
     <Slide mediaItems={mediaItems}/>
-  </div>
   );
 }
 

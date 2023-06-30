@@ -38,7 +38,7 @@ const ReactPlayerCustom = (props) => {
     <div>
       <video
         playsInline
-        // style={{ height: "100%", width: "100%" }}
+        style={{ height: "1080px", width: "1920px" }}
         muted
         controls={true}
         alt="All the devices"
