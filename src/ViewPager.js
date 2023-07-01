@@ -29,7 +29,8 @@ const SimpleSlider = ({ mediaItems }) => {
   const isHasData = () => Boolean(mediaItems.length)
 
   const handleEndVideo = useCallback(() => {
-    playerRef.current.slickNext();
+    // playerRef.current.slickNext();
+    handleNextByTime(1000)
   }, []);
 
   const playVideoCurrent = () => {
@@ -38,20 +39,23 @@ const SimpleSlider = ({ mediaItems }) => {
       currentVideo.play();
       currentVideo.addEventListener("ended", handleEndVideo);
     } else {
-      timeout = setTimeout(() => {
-        playerRef.current.slickNext();
-      }, 3000);
+      handleNextByTime(3000)
     }
   };
+
+  const handleNextByTime = (time = 0) => {
+    timeout = setTimeout(() => {
+      playerRef.current.slickNext();
+    }, time);
+  }
 
   const clearCurrent = () => {
     if (isVideo()) {
       getCurrentVideo().pause();
       getCurrentVideo().removeEventListener("ended", handleEndVideo);
       getCurrentVideo().currentTime = 0;
-    } else {
-      clearTimeout(timeout);
     }
+    clearTimeout(timeout)
   };
 
   useEffect(() => {
