@@ -1,72 +1,90 @@
 import ReactPlayerCustom from "./ReactPlayerCustom";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import Slider from "react-slick";
-import './Slide.css'
+import "./Slide.css";
 
-const  SimpleSlider = ({mediaItems}) => {
+const VIDEO = ["VIDEO"];
+let timeout = -1;
+const SimpleSlider = ({ mediaItems }) => {
   const playerRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [videoEnded, setVideoEnded] = useState(false);
-  const [typeMedia, setTypeMedia] = useState(mediaItems[0].type);
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    autoplay: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  const isVideo = (currentVideo) =>
+    VIDEO.includes(
+      currentVideo ? currentVideo?.tagName : getCurrentVideo()?.tagName
+    );
+  const getSliderWrapper = () => playerRef.current.innerSlider.list
+
+  const getCurrentVideo = () =>
+    getSliderWrapper().querySelector(".slick-active video") ||
+    getSliderWrapper().querySelector(".slick-active img");
+
+  const isHasData = () => Boolean(mediaItems.length)
+
+  const handleEndVideo = useCallback(() => {
+    playerRef.current.slickNext();
+  }, []);
+
+  const playVideoCurrent = () => {
+    const currentVideo = getCurrentVideo();
+    if (isVideo(currentVideo)) {
+      currentVideo.play();
+      currentVideo.addEventListener("ended", handleEndVideo);
+    } else {
+      timeout = setTimeout(() => {
+        playerRef.current.slickNext();
+      }, 3000);
+    }
+  };
+
+  const clearCurrent = () => {
+    if (isVideo()) {
+      getCurrentVideo().pause();
+      getCurrentVideo().removeEventListener("ended", handleEndVideo);
+      getCurrentVideo().currentTime = 0;
+    } else {
+      clearTimeout(timeout);
+    }
+  };
 
   useEffect(() => {
-    const timeout = videoEnded
-      ? setTimeout(
-          goToNextSlide,
-          typeMedia === "video" && videoEnded ? 0 : 10000
-        )
-      : null;
-        console.log(videoEnded);
-        console.log(typeMedia);
-    return () => clearTimeout(timeout);
-  }, [activeIndex, mediaItems.length, videoEnded]);
+    if (isHasData()) {
+      playVideoCurrent();
+    }
+  }, [playerRef, mediaItems]);
 
-  const goToNextSlide = () => {
-    const nextIndex =
-      activeIndex === mediaItems.length - 1 ? 0 : activeIndex + 1;
-    setTypeMedia(mediaItems[nextIndex].type);
-    setVideoEnded(mediaItems[nextIndex].type === "image");
-    setActiveIndex(nextIndex);
-    playerRef?.current?.slickNext();
-  };
-
-
-  const handleVideoEnded = () => {
-    setVideoEnded(true);
-  };
-
-    const settings = {
-      dots: false,
-      infinite: true,
-      autoplay: false,
-      slidesToShow: 1,
-      slidesToScroll: 1
-    };
-    return (
-      
-      <Slider ref ={playerRef} {...settings} afterChange={(e) => {
-        setActiveIndex(e)
-      }}>
+  return (
+    <Slider
+      ref={playerRef}
+      {...settings}
+      beforeChange={(e) => {
+        clearCurrent();
+      }}
+      afterChange={(e) => {
+        playVideoCurrent();
+      }}
+    >
       {mediaItems.map((item, index) => (
-        <div
-          key={index}
-        >
+        <div key={index}>
           {item.type === "image" && (
-            <div><img src={item.src} alt={`image ${index}`} /></div>
+            <div>
+              <img src={item.src} alt={`image ${index}`} />
+            </div>
           )}
           {item.type === "video" && (
-            <ReactPlayerCustom
-              url={item.src}
-              controls={true}
-              playing={index === activeIndex}
-              onEnded={handleVideoEnded}
-            />
+            <ReactPlayerCustom url={item.src} controls={true} />
           )}
         </div>
       ))}
     </Slider>
-    );
-  
-}
+  );
+};
 
-export default SimpleSlider
+export default SimpleSlider;
