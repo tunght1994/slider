@@ -83,7 +83,17 @@ const SimpleSlider = ({ mediaItems }) => {
             </div>
           )}
           {item.type === "video" && (
-            <ReactPlayerCustom url={item.src} controls={true} />
+            // <ReactPlayerCustom url={item.src} controls={true} />
+            <div>
+            <video
+              playsInline
+              style={{ height: "1080px", width: "1920px" }}
+              muted
+              controls={true}
+              alt="All the devices"
+              src={item.src}
+            />
+          </div>
           )}
         </div>
       ))}
