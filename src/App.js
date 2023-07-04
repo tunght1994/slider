@@ -4,8 +4,10 @@ import test from "./images/video/bg-StandbyScreen.png";
 import vide1 from "./images/video/cccd.mp4";
 import vide from "./images/video/van_tay.mp4";
 import Slide from "./ViewPager";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMediaItems } from "./redux/slider/action";
 
-const mediaItemsT = {
+export const mediaItemsT = {
   time: 10000,
   mediaItems : [
     { type: "video", src: vide1 },
@@ -15,9 +17,16 @@ const mediaItemsT = {
 };
 
 function App() {
-  const [mediaItems, setMediaItems] = useState({});
+  const [listSlider, setListSlider] = useState({});
+  const { listMedia } = useSelector(state => ({
+    listMedia: state.mediaItemsSlice.listMedia
+  }))
+
+  const dispatch = useDispatch()
   useEffect(() => {
-    setMediaItems(mediaItemsT);
+    console.log(listMedia);
+    dispatch(fetchMediaItems())
+
   }, []);
   return <Slide mediaItemsT={mediaItemsT} />;
 }
