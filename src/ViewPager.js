@@ -5,7 +5,7 @@ import "./Slide.css";
 
 const VIDEO = ["VIDEO"];
 let timeout = -1;
-const SimpleSlider = ({ mediaItems }) => {
+const SimpleSlider = ({ mediaItemsT }) => {
   const playerRef = useRef(null);
 
   const settings = {
@@ -26,11 +26,11 @@ const SimpleSlider = ({ mediaItems }) => {
     getSliderWrapper().querySelector(".slick-active video") ||
     getSliderWrapper().querySelector(".slick-active img");
 
-  const isHasData = () => Boolean(mediaItems.length)
+  const isHasData = () => Boolean(mediaItemsT.mediaItems.length)
 
   const handleEndVideo = useCallback(() => {
     // playerRef.current.slickNext();
-    handleNextByTime(1000)
+    handleNextByTime()
   }, []);
 
   const playVideoCurrent = () => {
@@ -39,7 +39,7 @@ const SimpleSlider = ({ mediaItems }) => {
       currentVideo.play();
       currentVideo.addEventListener("ended", handleEndVideo);
     } else {
-      handleNextByTime(3000)
+      handleNextByTime(mediaItemsT.time)
     }
   };
 
@@ -62,7 +62,7 @@ const SimpleSlider = ({ mediaItems }) => {
     if (isHasData()) {
       playVideoCurrent();
     }
-  }, [playerRef, mediaItems]);
+  }, [playerRef, mediaItemsT.mediaItems]);
 
   return (
     <Slider
@@ -75,7 +75,7 @@ const SimpleSlider = ({ mediaItems }) => {
         playVideoCurrent();
       }}
     >
-      {mediaItems.map((item, index) => (
+      {mediaItemsT.mediaItems.map((item, index) => (
         <div key={index}>
           {item.type === "image" && (
             <div>
