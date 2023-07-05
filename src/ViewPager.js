@@ -60,7 +60,7 @@ const SimpleSlider = ({ mediaItemsT }) => {
 
   useEffect(() => {
     if (isHasData()) {
-      playVideoCurrent();
+      playVideoCurrent()
     }
   }, [playerRef, mediaItemsT.mediaItems]);
 
