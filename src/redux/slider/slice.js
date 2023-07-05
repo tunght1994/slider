@@ -2,12 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { fetchMediaItems } from "./action";
 
 const initialState = {
-    listMedia: null,
+    listMedia: {
+      time: "",
+      mediaItems: []
+    },
   };
   
   
-  
-  // Create a slice for the mediaItems state
   const mediaItemsSlice = createSlice({
     name: 'mediaItems',
     initialState,

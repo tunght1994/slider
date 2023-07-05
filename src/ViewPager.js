@@ -38,7 +38,7 @@ const SimpleSlider = ({ mediaItemsT }) => {
     if (isVideo(currentVideo)) {
       currentVideo.play();
       currentVideo.addEventListener("ended", handleEndVideo);
-    } else {
+    } else{
       handleNextByTime(mediaItemsT.time)
     }
   };
@@ -87,7 +87,7 @@ const SimpleSlider = ({ mediaItemsT }) => {
             <div>
             <video
               playsInline
-              style={{ height: "1080px", width: "1920px" }}
+              style={{ height: "1920px", width: "1080px" }}
               muted
               controls={true}
               alt="All the devices"

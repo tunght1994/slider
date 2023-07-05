@@ -1,11 +1,16 @@
 .slick-slider{
-  width: 1920px;
-  height: 1080px;
+  width: 1080px;
+  height: 1920px;
 }
 .slick-slide{
   height: 100% !important;
 }
 
 .slick-track{
-  height: 1080px;
+  height: 1920px;
+}
+
+img{
+  width: 1080px;
+  height: 1920px;
 }

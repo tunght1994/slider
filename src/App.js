@@ -17,18 +17,15 @@ export const mediaItemsT = {
 };
 
 function App() {
-  const [listSlider, setListSlider] = useState({});
-  const { listMedia } = useSelector(state => ({
-    listMedia: state.mediaItemsSlice.listMedia
-  }))
-
   const dispatch = useDispatch()
-  useEffect(() => {
-    console.log(listMedia);
-    dispatch(fetchMediaItems())
+  const listMedia = useSelector(state => state.mediaItemsSlice.listMedia)
 
+  useEffect(() => {
+    dispatch(fetchMediaItems())
   }, []);
-  return <Slide mediaItemsT={mediaItemsT} />;
+
+
+  return <Slide mediaItemsT={listMedia} />;
 }
 
 export default App;
