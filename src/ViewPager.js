@@ -79,7 +79,7 @@ const SimpleSlider = ({ mediaItemsT }) => {
         <div key={index}>
           {item.type === "image" && (
             <div>
-              <img src={item.src} alt={`image ${index}`} />
+              <img src={item.src} alt={`image ${index}`} style={{ height: "1920px", width: "1080px" }}/>
             </div>
           )}
           {item.type === "video" && (

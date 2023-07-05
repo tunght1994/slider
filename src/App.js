@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import test from "./images/video/bg-StandbyScreen.png";
 import vide1 from "./images/video/cccd.mp4";
@@ -7,6 +7,9 @@ import Slide from "./ViewPager";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMediaItems } from "./redux/slider/action";
 import useConnectWsCamera from "./hook/useConnectWsCamera";
+
+import face_loading from "./images/Lottie/face_loading.json";
+import Lottie from "lottie-react";
 
 export const mediaItemsT = {
   time: 10000,
@@ -18,8 +21,9 @@ export const mediaItemsT = {
 };
 
 function App() {
-  const { cameraStreamUrl, count, errDevice, message } =
-    useConnectWsCamera();
+  const lottieRef = useRef();
+
+  const { cameraStreamUrl, count, errDevice, message } = useConnectWsCamera();
 
   const dispatch = useDispatch();
   const listMedia = useSelector((state) => state.mediaItemsSlice.listMedia);
@@ -36,7 +40,25 @@ function App() {
         <div className="face-screen">
           <div className="block-face">
             <div id="liveView" className="block-avatar">
-              <img src="" alt="autobank" />
+              {cameraStreamUrl && (
+                <img
+                  src={test}
+                  alt="autobank"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "50%",
+                    position: "relative",
+                    zIndex: "21",
+                  }}
+                />
+              )}
+              <Lottie
+                animationData={face_loading}
+                loop={true}
+                lottieRef={lottieRef}
+                className="lottie"
+              />
               {count && <div className="count">{count}</div>}
             </div>
           </div>
