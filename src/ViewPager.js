@@ -5,7 +5,7 @@ import "./Slide.css";
 
 const VIDEO = ["VIDEO"];
 let timeout = -1;
-const SimpleSlider = ({ mediaItemsT }) => {
+const SimpleSlider = ({ mediaItemsT, handleLatestVideo }) => {
   const playerRef = useRef(null);
 
   const settings = {
@@ -20,17 +20,17 @@ const SimpleSlider = ({ mediaItemsT }) => {
     VIDEO.includes(
       currentVideo ? currentVideo?.tagName : getCurrentVideo()?.tagName
     );
-  const getSliderWrapper = () => playerRef.current.innerSlider.list
+  const getSliderWrapper = () => playerRef.current.innerSlider.list;
 
   const getCurrentVideo = () =>
     getSliderWrapper().querySelector(".slick-active video") ||
     getSliderWrapper().querySelector(".slick-active img");
 
-  const isHasData = () => Boolean(mediaItemsT.mediaItems.length)
+  const isHasData = () => Boolean(mediaItemsT.mediaItems.length);
 
   const handleEndVideo = useCallback(() => {
     // playerRef.current.slickNext();
-    handleNextByTime()
+    handleNextByTime();
   }, []);
 
   const playVideoCurrent = () => {
@@ -38,8 +38,8 @@ const SimpleSlider = ({ mediaItemsT }) => {
     if (isVideo(currentVideo)) {
       currentVideo.play();
       currentVideo.addEventListener("ended", handleEndVideo);
-    } else{
-      handleNextByTime(mediaItemsT.time)
+    } else {
+      handleNextByTime(mediaItemsT.time);
     }
   };
 
@@ -47,7 +47,9 @@ const SimpleSlider = ({ mediaItemsT }) => {
     timeout = setTimeout(() => {
       playerRef.current.slickNext();
     }, time);
-  }
+  };
+
+  const isVideoLatest = () => getCurrentVideo().dataset.latest === "true";
 
   const clearCurrent = () => {
     if (isVideo()) {
@@ -55,15 +57,21 @@ const SimpleSlider = ({ mediaItemsT }) => {
       getCurrentVideo().removeEventListener("ended", handleEndVideo);
       getCurrentVideo().currentTime = 0;
     }
-    clearTimeout(timeout)
+    clearTimeout(timeout);
   };
 
   useEffect(() => {
     if (isHasData()) {
-      playVideoCurrent()
+      playVideoCurrent();
     }
   }, [playerRef, mediaItemsT.mediaItems]);
 
+  const handleAfterChange = (e) => {
+    playVideoCurrent();
+    if (isVideoLatest()) {
+      handleLatestVideo();
+    }
+  };
   return (
     <Slider
       ref={playerRef}
@@ -71,29 +79,33 @@ const SimpleSlider = ({ mediaItemsT }) => {
       beforeChange={(e) => {
         clearCurrent();
       }}
-      afterChange={(e) => {
-        playVideoCurrent();
-      }}
+      afterChange={handleAfterChange}
     >
       {mediaItemsT.mediaItems.map((item, index) => (
         <div key={index}>
           {item.type === "image" && (
             <div>
-              <img src={item.src} alt={`image ${index}`} style={{ height: "1920px", width: "1080px" }}/>
+              <img
+                data-latest={index === mediaItemsT.mediaItems.length - 1}
+                src={item.src}
+                alt={`image ${index}`}
+                style={{ height: "1920px", width: "1080px" }}
+              />
             </div>
           )}
           {item.type === "video" && (
             // <ReactPlayerCustom url={item.src} controls={true} />
             <div>
-            <video
-              playsInline
-              style={{ height: "1920px", width: "1080px" }}
-              muted
-              controls={true}
-              alt="All the devices"
-              src={item.src}
-            />
-          </div>
+              <video
+                playsInline
+                style={{ height: "1920px", width: "1080px" }}
+                muted
+                controls={true}
+                data-latest={index === mediaItemsT.mediaItems.length - 1}
+                alt="All the devices"
+                src={item.src}
+              />
+            </div>
           )}
         </div>
       ))}

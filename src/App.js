@@ -32,10 +32,14 @@ function App() {
     dispatch(fetchMediaItems());
   }, []);
 
+  const handleLatestVideo = () => {
+    console.log("call api here");
+  };
+
   return (
     <>
       {!cameraStreamUrl ? (
-        <Slide mediaItemsT={listMedia} />
+        <Slide mediaItemsT={listMedia} handleLatestVideo={handleLatestVideo} />
       ) : (
         <div className="face-screen">
           <div className="block-face">
